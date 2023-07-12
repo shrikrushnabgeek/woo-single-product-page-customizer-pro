@@ -45,7 +45,15 @@ class wsppcp_admin_product_page_meta_box
 	
 
         ?>
-        <div class="wrap wsppcp-main-box">
+        <div class="wrap wsppcp-main-box wsppcp-meta-box">
+            <?php 
+            if(!empty($wsppcp_hooks)){ ?>
+                <div class="wsppcp-page-title">
+                    <span class="wsppcp_ajax_loader edit_ajax_loader"></span>
+                    <input type="button" value="Remove All" id="wsppcp_clear_all" data-product-id="<?php _e($post->ID); ?>" class="wsppcp-submit-button wsppcp-cancel-button">
+                </div>
+                <?php 
+            }?>
             <div class='inner wsppcp_inner'>
                 <?php
                 if ( isset( $errormsg ) ) {
@@ -54,7 +62,7 @@ class wsppcp_admin_product_page_meta_box
                     <?php
                 }
                 ?>
-                <ul class="wsppcp_toggle wsppcp_tab">
+                <ul class="wsppcp_toggle wsppcp_tab wsppcp_hooks_list">
                     <?php if(!empty($wsppcp_hooks)){ 
                         $wsppcp_hooks = array_reverse($wsppcp_hooks);
                         foreach($wsppcp_hooks as $key=>$wsppcp_hook) {?>
@@ -62,10 +70,10 @@ class wsppcp_admin_product_page_meta_box
                             <span class="wsppcp_hook_action">
                             <span class="wsppcp_ajax_loader edit_ajax_loader"></span>
                             <a class="wsppcp_edit_hook wsppcp_edit_single_product_hook" data-hook='<?php _e($key); ?>' href="javascript:void(0)" data-product-id="<?php _e($post->ID); ?>"><?php _e('Edit','woo-single-product-page-customizer-pro'); ?></a>
+
                             <a class="wsppcp_remove_hook wsppcp_remove_single_product_hook" data-hook='<?php _e($key); ?>' href="javascript:void(0)" data-product-id="<?php _e($post->ID); ?>"><?php _e('Remove','woo-single-product-page-customizer-pro'); ?></a>
                             </span>
-                            <div class="wsppcphook_details" style="display:none">					
-                            </div>
+                            <div class="wsppcphook_details" style="display:none"></div>
                         </li>
                     <?php } 
                 }?></ul>

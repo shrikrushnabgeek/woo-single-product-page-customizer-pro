@@ -236,16 +236,23 @@ if(isset($label_options['wsppcp_related_product_column']))		$related_product_col
 	<!-- General Setting Tabbing Html Start -->
 
 	<div class="wsppcp-hidden <?php if ($tab == null) { 	_e('wsppcp-active-tab'); } ?>">
-		<h2><?php _e('Woocommerce Single Product Page Customizer Pro','woo-single-product-page-customizer-pro'); ?> &raquo; <?php _e( 'Settings', 'woo-single-product-page-customizer-pro' ); ?></h2>	
+		<div class="wsppcp-page-title">
+			<h2><?php _e('Woocommerce Single Product Page Customizer Pro','woo-single-product-page-customizer-pro'); ?> &raquo; <?php _e( 'Settings', 'woo-single-product-page-customizer-pro' ); ?></h2>	
+			<?php 
+			if(!empty($wsppcp_hooks)){ ?>
+				<span class="wsppcp_ajax_loader edit_ajax_loader"></span>
+				<input type="button" value="Remove All" id="wsppcp_clear_all" class="wsppcp-submit-button wsppcp-cancel-button">
+				<?php 
+			}?>
+		</div>
 		<div class='wsppcp_inner'>
 			<?php
-			if ( isset( $errormsg ) ) {
-				?>
+			if ( isset( $errormsg ) ) {?>
 				<div class="error fade"><p><?php _e($errormsg); ?></p></div>
 				<?php
 			}
 			?>
-			<ul class="wsppcp_toggle wsppcp_tab">
+			<ul class="wsppcp_toggle wsppcp_tab wsppcp_hooks_list">
 				<?php if(!empty($wsppcp_hooks)){ 
 					$wsppcp_hooks = array_reverse($wsppcp_hooks);
 					foreach($wsppcp_hooks as $key=>$wsppcp_hook) {?>
@@ -254,10 +261,10 @@ if(isset($label_options['wsppcp_related_product_column']))		$related_product_col
 						<span class="wsppcp_hook_action">
 						<span class="wsppcp_ajax_loader edit_ajax_loader"></span>
 						<a class="wsppcp_edit_hook wsppcp_edit_global_hook" data-hook='<?php _e($key); ?>' href="javascript:void(0)"><?php _e('Edit','woo-single-product-page-customizer-pro'); ?></a>
+
 						<a class="wsppcp_remove_hook wsppcp_remove_global_hook"  data-hook='<?php _e($key); ?>' href="javascript:void(0)"><?php _e('Remove','woo-single-product-page-customizer-pro'); ?></a>
 						</span>
-						<div class="wsppcphook_details" style="display:none">					
-						</div>
+						<div class="wsppcphook_details" style="display:none"></div>
 					</li>
 				<?php } 
 			}?></ul>

@@ -8,7 +8,7 @@ Description: By using this smart plugin, allows you to add text or HTML in woooc
 
 Author: Geek Code Lab
 
-Version: 1.3
+Version: 1.4
 
 WC tested up to: 6.3.1
 
@@ -325,22 +325,20 @@ add_action("wp_ajax_wsppcp_remove_single_product_hook", "wsppcp_remove_single_pr
 function wsppcp_remove_single_product_hook()
 {	
 	check_ajax_referer( 'wsppcp_ajax_remove_nonce', 'security' );
-	$hook		=	'';
-	$product_id = $_POST['product_id'];
+	$hook			=	'';
+	$product_id		= $_POST['product_id'];
 	$current_page	= "";
 
-	if(isset($_POST['product_id']) ) 	$product_id	= $_POST['product_id'];
-	if(isset($_REQUEST['current_page']))				$current_page = $_REQUEST['current_page'];
-	if(isset($_POST['hook_name']) ) 	$hook		= sanitize_text_field($_POST['hook_name']);
+	if(isset($_POST['product_id']) )		$product_id		= $_POST['product_id'];
+	if(isset($_REQUEST['current_page']))	$current_page	= $_REQUEST['current_page'];
+	if(isset($_POST['hook_name']) )			$hook			= sanitize_text_field($_POST['hook_name']);
 
 
 	if(isset($product_id) && !empty($product_id)){
 		$single_page_hook_list = array();	
-		echo $current_page;
 		if(isset($current_page) && !empty($current_page) && $current_page == "term"){
 
 			$single_page_hook_list = get_term_meta($product_id, 'wsppcp_product_categories_position', true);   
-			print_r($single_page_hook_list);    
 			unset($single_page_hook_list[$hook]);
 			update_term_meta($product_id, 'wsppcp_product_categories_position', $single_page_hook_list);
 	
@@ -350,7 +348,6 @@ function wsppcp_remove_single_product_hook()
 			unset($single_page_hook_list[$hook]);
 			update_post_meta($product_id, 'wsppcp_single_product_position', $single_page_hook_list);
 		}
-		echo $product_id;
 		echo true;
 	}else{
 		echo false;
@@ -360,6 +357,43 @@ function wsppcp_remove_single_product_hook()
 /**  Single Product Page  Remove Hook Form End */
 
 
+/** Admin Panel Clear All Form Start */
+add_action("wp_ajax_wsppcp_clear_all", "wsppcp_clear_all");
+function wsppcp_clear_all(){	
+	check_ajax_referer( 'wsppcp_ajax_remove_nonce', 'security' );
+	
+	$product_id		= null;
+	$current_page	= "";
+
+	if(isset($_POST['product_id']) )		$product_id		= $_POST['product_id'];
+	if(isset($_REQUEST['current_page']))	$current_page	= $_REQUEST['current_page'];
+	
+	if(isset($product_id) && !empty($product_id)){
+
+		if(isset($current_page) && !empty($current_page) && $current_page == "term"){
+
+			$single_page_hook_list = get_term_meta($product_id, 'wsppcp_product_categories_position', true);   
+			unset($single_page_hook_list);
+			
+			echo update_term_meta($product_id, 'wsppcp_product_categories_position', $single_page_hook_list);
+		}else{
+
+			$single_page_hook_list = get_post_meta($product_id, 'wsppcp_single_product_position', true);        
+			unset($single_page_hook_list);
+			
+			echo update_post_meta($product_id, 'wsppcp_single_product_position', $single_page_hook_list);
+		}	
+	}else{
+
+		$wsppcp_hook = wsppcp_get_hook();
+		unset($wsppcp_hook);
+		
+		echo update_option('wsppcp_hook',$wsppcp_hook);
+
+	}
+	die;
+}
+/** Admin Panel Clear All Form End */
 
 
 

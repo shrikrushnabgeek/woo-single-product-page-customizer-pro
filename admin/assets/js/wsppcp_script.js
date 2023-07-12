@@ -21,7 +21,6 @@ jQuery(document).ready(function() {
         }
     });
 
-
     jQuery('.wsppcp_add_global_position').click(function() {
         var $curr = jQuery(this);
 
@@ -173,15 +172,13 @@ jQuery(document).ready(function() {
             jQuery(".wsppcp_tab").addClass("empty");
         }
     });
-
-
+   
     jQuery('.wsppcp_edit_global_hook').click(function() {
         var main_li = jQuery(this).parent().parent();
         var hook_name = jQuery(this).attr('data-hook');
-        // jQuery(this).prev().css("display","inline");
+        jQuery(this).hide();
         var $curr = jQuery(this);
-        $curr.prev().css("display", "inline");
-
+        $curr.siblings('.wsppcp_ajax_loader').css("display", "inline");
         jQuery.ajax({
             url: custom_call.ajaxurl,
             type: 'post',
@@ -191,13 +188,16 @@ jQuery(document).ready(function() {
                 security: ajax_edit_nonce,
                 hook_name: hook_name
             },
-            success: function(response) {
 
+            success: function(response) {
 
                 tinymce.remove(".wsppcp_toggle .wsppcp_content");
                 main_li.find(".wsppcphook_details").html(response);
                 jQuery('.wsppcphook_details').hide();
                 main_li.find(".wsppcphook_details").show();
+
+                main_li.siblings().find('.wsppcp_edit_global_hook').show();
+                
                 wp.editor.initialize("content_" + hook_name, {
                     mediaButtons: true,
                     tinymce: {
@@ -257,9 +257,10 @@ jQuery(document).ready(function() {
         var hook_name = jQuery(this).attr('data-hook');
         var product_id = jQuery(this).attr('data-product-id');
         var current_page = jQuery(this).attr('data-page');
+        jQuery(this).hide();
 
         var $curr = jQuery(this);
-        $curr.prev().css("display", "inline");
+        $curr.siblings('.wsppcp_ajax_loader').css("display", "inline");
 
         jQuery.ajax({
             url: custom_call.ajaxurl,
@@ -279,6 +280,9 @@ jQuery(document).ready(function() {
                 main_li.find(".wsppcphook_details").html(response);
                 jQuery('.wsppcphook_details').hide();
                 main_li.find(".wsppcphook_details").show();
+
+                main_li.siblings().find('.wsppcp_edit_single_product_hook').show();
+
                 wp.editor.initialize("content_" + hook_name, {
                     mediaButtons: true,
                     tinymce: {
@@ -333,13 +337,13 @@ jQuery(document).ready(function() {
         });
     });
 
-
     jQuery('.wsppcp_remove_global_hook').click(function() {
         if (!confirm('Are you sure remove this hook?')) {
             return false;
         }
         var $curr = jQuery(this);
-        $curr.prev().css("display", "inline");
+        $curr.siblings('.wsppcp_ajax_loader').css("display", "inline");
+
         var hook_name = jQuery(this).attr('data-hook');
         var main_li = jQuery(this).parent().parent();
         jQuery.ajax({
@@ -355,6 +359,10 @@ jQuery(document).ready(function() {
                 if (response == true) {
                     main_li.remove();
                 }
+
+                if(jQuery('.wsppcp_hooks_list li').length == 0){
+                    jQuery('#wsppcp_clear_all').hide();
+                }
                 $curr.prev().css("display", "none");
 
                 // jQuery(".wsppcp_add_hook_form").html(response);				 
@@ -364,17 +372,15 @@ jQuery(document).ready(function() {
     });
 
     jQuery('.wsppcp_remove_single_product_hook').click(function() {
-        if (!confirm('Are you sure remove this hook?')) {
-            return false;
-        }
+        if (!confirm('Are you sure remove this hook?')) return false;
 
         var $curr = jQuery(this);
         var product_id = jQuery(this).attr('data-product-id');
         var hook_name = jQuery(this).attr('data-hook');
         var main_li = jQuery(this).parent().parent();
         var current_page = jQuery(this).attr('data-page');
+        $curr.siblings('.wsppcp_ajax_loader').css("display", "inline");
 
-        $curr.prev().css("display", "inline");
         jQuery.ajax({
             url: custom_call.ajaxurl,
             type: 'post',
@@ -386,9 +392,11 @@ jQuery(document).ready(function() {
                 current_page: current_page
             },
             success: function(response) {
-                console.log(response);
                 if (response == true) {
                     main_li.remove();
+                }
+                if(jQuery('.wsppcp_hooks_list li').length == 0){
+                    jQuery('#wsppcp_clear_all').hide();
                 }
 
                 $curr.closest("li").css("display", "none");
@@ -399,6 +407,40 @@ jQuery(document).ready(function() {
 
     });
 
+    /** Admin Panel Clear All Form START */
+    jQuery('#wsppcp_clear_all').click(function() {
+        if (!confirm('Are You Sure You Want to Remove All?'))   return false;
+        if(jQuery('.wsppcp_hooks_list li').length == 0)         return false
+
+        var $curr = jQuery(this);
+        $curr.prev().css("display", "inline");
+        
+        var product_id = current_page = null;
+        product_id          = jQuery(this).attr('data-product-id');
+        current_page        = jQuery(this).attr('data-page');
+
+        var data = {
+            action:     'wsppcp_clear_all',
+            security:   ajax_remove_nonce
+        }
+
+        if(product_id !== null)     data.product_id     = product_id;
+        if(current_page !== null)   data.current_page   = current_page;
+       
+        jQuery.ajax({
+            url: custom_call.ajaxurl,
+            type: 'post',
+            data: data,
+            success: function(response) {
+                if (response == true) {
+                    $curr.prev().css("display", "none");
+                    jQuery('.wsppcp_hooks_list li').remove();
+                    $curr.hide();
+                }
+            }
+        });
+    });
+    /** Admin Panel Clear All Form END */
 
 
     /** Remove Content Tab JS Strat */

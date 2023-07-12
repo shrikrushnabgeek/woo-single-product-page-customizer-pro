@@ -20,7 +20,15 @@ function wsppcp_taxonomy_edit_meta_field($term) {
         </tr>
        <tr>
            <td colspan="3"> 
-               <div class="wrap wsppcp-main-box wsppcp-categories-box">
+               <div class="wrap wsppcp-main-box wsppcp-categories-box wsppcp-meta-box">
+                    <?php 
+                    if(!empty($wsppcp_hooks)){ ?>
+                        <div class="wsppcp-page-title">
+                            <span class="wsppcp_ajax_loader edit_ajax_loader"></span>
+                            <input type="button" value="Remove All" id="wsppcp_clear_all"  data-page="term" data-product-id="<?php _e($term_id); ?>" class="wsppcp-submit-button wsppcp-cancel-button">
+                        </div>
+                        <?php 
+                    }?>
                     <div class='inner wsppcp_inner'>
                         <?php
                         if ( isset( $errormsg ) ) {
@@ -29,7 +37,7 @@ function wsppcp_taxonomy_edit_meta_field($term) {
                             <?php
                         }
                         ?>
-                        <ul class="wsppcp_toggle wsppcp_tab">
+                        <ul class="wsppcp_toggle wsppcp_tab wsppcp_hooks_list">
                             <?php if(!empty($wsppcp_hooks)){ 
                                 $wsppcp_hooks = array_reverse($wsppcp_hooks);
                                 foreach($wsppcp_hooks as $key=>$wsppcp_hook) {?>
@@ -37,10 +45,10 @@ function wsppcp_taxonomy_edit_meta_field($term) {
                                     <span class="wsppcp_hook_action">
                                     <span class="wsppcp_ajax_loader edit_ajax_loader"></span>
                                     <a class="wsppcp_edit_hook wsppcp_edit_single_product_hook" data-page="term" data-hook='<?php _e($key); ?>' href="javascript:void(0)" data-product-id="<?php _e($term_id); ?>"><?php _e('Edit','woo-single-product-page-customizer-pro'); ?></a>
+                                    
                                     <a class="wsppcp_remove_hook wsppcp_remove_single_product_hook" data-page="term" data-hook='<?php _e($key); ?>' href="javascript:void(0)" data-product-id="<?php _e($term_id); ?>"><?php _e('Remove','woo-single-product-page-customizer-pro'); ?></a>
                                     </span>
-                                    <div class="wsppcphook_details" style="display:none">					
-                                    </div>
+                                    <div class="wsppcphook_details" style="display:none"></div>
                                 </li>
                             <?php } 
                         }?></ul>
