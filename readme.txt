@@ -75,7 +75,7 @@ After active plugin go to Woocommerce->Woocommerce Single Product Page Customize
 == Changelog ==
 
 = 1.4 =
- -added remove all and cencel edit functionality
+ -added "remove all" option
  
 = 1.3 =
  -Tested update wp version 5.9.1
