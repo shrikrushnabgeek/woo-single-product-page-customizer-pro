@@ -18,9 +18,7 @@ function  wsppcp_error_message($msg){
 	
 }
 function  wsppcp_success_message($msg){
-	echo '<div class="notice notice-success wsppcp-success-msg is-dismissible"><p> ' . $msg . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text"> Dismiss this notice.</span></button></div>';		
-	
-	
+	echo '<div class="notice notice-success wsppcp-success-msg is-dismissible"><p> ' . $msg . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text"> Dismiss this notice.</span></button></div>';
 }
 
 function wsppcp_get_hook_value($hook){
@@ -39,7 +37,4 @@ function wsppcp_output($meta){
 	return do_shortcode(html_entity_decode(wp_unslash( $meta )));
 	
 }
-
-
-
 ?>

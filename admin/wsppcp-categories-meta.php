@@ -1,9 +1,5 @@
 <?php
-
-
 add_action('product_cat_edit_form_fields', 'wsppcp_taxonomy_edit_meta_field', 30, 2);
-
-
 //Product Cat Edit page
 function wsppcp_taxonomy_edit_meta_field($term) {
 
@@ -79,11 +75,7 @@ function wsppcp_taxonomy_edit_meta_field($term) {
 }
 
 add_action('edited_product_cat', 'wsppcp_save_taxonomy_custom_meta', 10, 1);
-
 function wsppcp_save_taxonomy_custom_meta($term_id) {
-
-
-
     $single_page_hook_list = array();
     
     $add_position_hook = sanitize_text_field($_POST['hook']);
@@ -104,7 +96,5 @@ function wsppcp_save_taxonomy_custom_meta($term_id) {
         
         update_term_meta($term_id, 'wsppcp_product_categories_position', $single_page_hook_list);
     }
-    
-
 }
 ?>

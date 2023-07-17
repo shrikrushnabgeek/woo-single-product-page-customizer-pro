@@ -1,22 +1,12 @@
 <?php
-
 /*
-
 Plugin Name: Woocommerce Single Product Page Customizer Pro
-
 Description: By using this smart plugin, allows you to add text or HTML in wooocommerce Single product page , no need to edit theme and woocommerce plugin!
-
 Author: Geek Code Lab
-
-Version: 1.4
-
-WC tested up to: 6.3.1
-
+Version: 1.5
+WC tested up to: 7.8.2
 Author URI: https://geekcodelab.com/
-
 Text Domain : woo-single-product-page-customizer-pro
-
-
 */
 
 if( !defined( 'ABSPATH' ) ) exit;
@@ -209,7 +199,8 @@ function wsppcp_edit_form(){
 add_action("wp_ajax_wsppcp_remove_global_hook", "wsppcp_removed_hook");
 function wsppcp_removed_hook(){	
 	check_ajax_referer( 'wsppcp_ajax_remove_nonce', 'security' );
-	$hook	= '';
+	$hook			= '';
+	$wsppcp_hook	= '';
 	if(isset($_POST['hook_name'])){
 		$hook = sanitize_text_field($_POST['hook_name']);
 	}
@@ -226,18 +217,17 @@ function wsppcp_removed_hook(){
 }
 /** Admin Panel Remove Hook Form End */
 
-
 /** Single Product Page Hook Add Ajax Strat */
 
 add_action('wp_ajax_wsppcp_single_product_add_form','wsppcp_single_product_add_form');
 add_action( 'wp_ajax_nopriv_wsppcp_single_product_add_form', 'wsppcp_single_product_add_form' );
 
 function wsppcp_single_product_add_form(){
-	$hook		= "";
-	$hook_value	= "";
-	$all_hook	= "";
-	$product_id = "";
-	$current_page 		= "";
+	$hook			= "";
+	$hook_value		= "";
+	$all_hook		= "";
+	$product_id		= "";
+	$current_page	= "";
 
 	if(isset($_POST['product_id']))				$product_id = $_POST['product_id'];
 	if(isset($_REQUEST['current_page']))		$current_page = $_REQUEST['current_page'];
@@ -259,11 +249,10 @@ function wsppcp_single_product_add_form(){
 	}else{
 
 		$prodcut_position_hook 	= get_post_meta($product_id, 'wsppcp_single_product_position', true);
-		if(isset($prodcut_position_hook) && !empty($prodcut_position_hook)) $hook_value 			= $prodcut_position_hook[$hook];
+		if(isset($prodcut_position_hook) && !empty($prodcut_position_hook)) $hook_value = $prodcut_position_hook[$hook];
 	
 		$all_hook	= get_post_meta($product_id, 'wsppcp_single_product_position', true);
 	}
-	
 	?>
 	<section method="post" class="wsppcp_form">
 		<table class="form-table">
@@ -319,7 +308,6 @@ function wsppcp_single_product_add_form(){
 }
 /** Single Product Page Hook Add Ajax End */
 
-
 /**  Single Product Page Remove Hook Form Start */
 add_action("wp_ajax_wsppcp_remove_single_product_hook", "wsppcp_remove_single_product_hook");
 function wsppcp_remove_single_product_hook()
@@ -356,7 +344,6 @@ function wsppcp_remove_single_product_hook()
 }
 /**  Single Product Page  Remove Hook Form End */
 
-
 /** Admin Panel Clear All Form Start */
 add_action("wp_ajax_wsppcp_clear_all", "wsppcp_clear_all");
 function wsppcp_clear_all(){	
@@ -364,6 +351,7 @@ function wsppcp_clear_all(){
 	
 	$product_id		= null;
 	$current_page	= "";
+	$single_page_hook_list = array();
 
 	if(isset($_POST['product_id']) )		$product_id		= $_POST['product_id'];
 	if(isset($_REQUEST['current_page']))	$current_page	= $_REQUEST['current_page'];
@@ -394,9 +382,4 @@ function wsppcp_clear_all(){
 	die;
 }
 /** Admin Panel Clear All Form End */
-
-
-
-
-
 ?>

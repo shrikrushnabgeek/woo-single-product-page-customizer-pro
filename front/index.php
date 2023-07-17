@@ -1,11 +1,6 @@
 <?php
-
-
-
-/** Front Side Global Content Print Strat */
- 
+/** Front Side Global Content Print Strat */ 
 add_action( 'init', 'global_content_print_function' );
- 
 function global_content_print_function() {
 
 	$wsppcp_hooks	=	wsppcp_get_hook();
@@ -83,10 +78,7 @@ function woocommerce_product_thumbnails($arg) {
 	echo "</div>";
 	
 }
-
 /** Front Side Global Content Print End */
-
-
 
 /** front side Css */
 function wsppcp_front_site_css_add() {
@@ -116,6 +108,3 @@ function wsppcp_front_site_css_add() {
     <?php
 }
 add_action('wp_head', 'wsppcp_front_site_css_add');
-
-
-

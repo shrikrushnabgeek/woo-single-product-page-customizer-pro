@@ -1,12 +1,6 @@
 <?php
-
-
-
-
-
 class wsppcp_admin_product_page_meta_box
 {
-
     /**
      * Constructor.
      */
