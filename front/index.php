@@ -1,110 +1,175 @@
 <?php
-/** Front Side Global Content Print Strat */ 
-add_action( 'init', 'global_content_print_function' );
-function global_content_print_function() {
 
-	$wsppcp_hooks	=	wsppcp_get_hook();
-	if(!empty($wsppcp_hooks)){
-		foreach($wsppcp_hooks as $key => $wsppcp_hook){
+/**
+ * Front Side Global Content Print Start
+ */
+add_action('wp', 'global_content_print_function');
+function global_content_print_function()
+{
+    global $wp_query;
+    if (is_product()) {
+        $wsppcp_current_product_categories_id = $wsppcp_exclude_posts = $wsppcp_exclude_categories = $wsppcp_hook_exclude = [];
 
-			if($key == 'woocommerce_after_single_product_summary'){
-				add_action( $key, 'wsppcp_single_product_product_summary_hook',8);
+        $wsppcp_current_product_id           = $wp_query->post->ID;
+        $wsppcp_hooks                        = wsppcp_get_hook();
+        $wsppcp_hook_exclude                 = wsppcp_get_hook_exclude();
+        $wsppcp_current_product_categories   = wp_get_post_terms($wsppcp_current_product_id, 'product_cat');
 
-			}elseif($key == 'woocommerce_single_product_summary'){
-				add_action( $key, 'wsppcp_single_product_page_hook',4);
+        foreach ($wsppcp_current_product_categories as $wsppcp_current_product_category) {
+            array_push($wsppcp_current_product_categories_id, $wsppcp_current_product_category->term_id);
+            if ($wsppcp_current_product_category->parent !== 0) {
+                array_push($wsppcp_current_product_categories_id, $wsppcp_current_product_category->parent);
+            }
+        }
+        $wsppcp_current_product_categories_id = array_unique($wsppcp_current_product_categories_id);
 
-			}elseif($key == 'woocommerce_after_product_title'){
+        if (!empty($wsppcp_hooks)) {
+            foreach ($wsppcp_hooks as $key => $wsppcp_hook) {
 
-				add_action( 'woocommerce_single_product_summary','woocommerce_after_product_title',5);
+                if (isset($wsppcp_hook_exclude) && !empty($wsppcp_hook_exclude)) {
+                    if (array_key_exists($key . '_exclude', $wsppcp_hook_exclude)) {
+                        $wsppcp_exclude_posts       = $wsppcp_hook_exclude[$key . '_exclude']['exclude_post'];
+                        $wsppcp_exclude_categories  = $wsppcp_hook_exclude[$key . '_exclude']['exclude_category'];
+                    } else {
+                        $wsppcp_exclude_posts       = array();
+                        $wsppcp_exclude_categories  = array();
+                    }
+                }
 
-			}elseif($key == 'woocommerce_after_product_price'){
+                if (!in_array($wsppcp_current_product_id, $wsppcp_exclude_posts) && !array_intersect($wsppcp_exclude_categories, $wsppcp_current_product_categories_id)) {
 
-				add_action( 'woocommerce_single_product_summary' , 'woocommerce_after_product_price' ,10);
+                    switch ($key) {
+                        case 'woocommerce_after_single_product_summary':
+                            add_action($key, 'wsppcp_single_product_product_summary_hook', 8);
+                            break;
 
-			}elseif($key == 'woocommerce_product_thumbnails'){
+                        case 'woocommerce_single_product_summary':
+                            add_action($key, 'wsppcp_single_product_page_hook', 4);
+                            break;
 
-				add_action( 'woocommerce_after_single_product_summary','woocommerce_product_thumbnails',5);
-				
-			}else{
+                        case 'woocommerce_after_product_title':
+                            add_action('woocommerce_single_product_summary', 'woocommerce_after_product_title', 5);
+                            break;
 
-				add_action( $key, 'wsppcp_single_product_page_hook',10);
-			}
-	
-		}
-	}
+                        case 'woocommerce_after_product_price':
+                            add_action('woocommerce_single_product_summary', 'woocommerce_after_product_price', 10);
+                            break;
+
+                        case 'woocommerce_product_thumbnails':
+                            add_action('woocommerce_after_single_product_summary', 'woocommerce_product_thumbnails', 5);
+                            break;
+
+                        default:
+                            add_action($key, 'wsppcp_single_product_page_hook', 10);
+                            break;
+                    }
+                }
+            }
+        }
+    }
 }
-function wsppcp_single_product_page_hook($arg) {
-	$hook = current_filter();
-	$wsppcp_hooks=wsppcp_get_hook(); 
-
-	echo "<div class='wsppcp_div_block ".$hook." '>";
-		echo wsppcp_output($wsppcp_hooks[$hook]);
-		echo "</div>";
-	
+/**
+ * Function to output content based on the hook
+ */
+function wsppcp_single_product_page_hook($arg)
+{
+    $hook = current_filter();
+    $wsppcp_hooks = wsppcp_get_hook();
+    if (isset($wsppcp_hooks[$hook]) && !empty($wsppcp_hooks[$hook])) {
+        echo "<div class='wsppcp_div_block " . esc_attr($hook) . "'>";
+        echo wp_kses_post(wsppcp_output($wsppcp_hooks[$hook]));
+        echo "</div>";
+    }
 }
 
-function wsppcp_single_product_product_summary_hook($arg) {
-	$hook = current_filter();
-	$wsppcp_hooks=wsppcp_get_hook(); 
-
-	echo "<div class='wsppcp_div_block wsppcp_product_summary_text'>";
-	echo wsppcp_output($wsppcp_hooks[$hook]);
-	echo "</div>";
-	
+/**
+ * Function to output content for woocommerce_after_single_product_summary hook
+ */
+function wsppcp_single_product_product_summary_hook($arg)
+{
+    $hook = current_filter();
+    $wsppcp_hooks = wsppcp_get_hook();
+    if (isset($wsppcp_hooks[$hook]) && !empty($wsppcp_hooks[$hook])) {
+        echo "<div class='wsppcp_div_block wsppcp_product_summary_text'>";
+        echo wp_kses_post(wsppcp_output($wsppcp_hooks[$hook]));
+        echo "</div>";
+    }
 }
 
-function woocommerce_after_product_title(){
-	$wsppcp_hooks	=	wsppcp_get_hook(); 
-				
-	echo "<div class='wsppcp_div_block woocommerce_after_product_title'>";
-	echo wsppcp_output($wsppcp_hooks['woocommerce_after_product_title']);
-	echo "</div>";
+/**
+ * Function to output content for woocommerce_after_product_title hook
+ */
+function woocommerce_after_product_title()
+{
+    $wsppcp_hooks = wsppcp_get_hook();
+    if (isset($wsppcp_hooks['woocommerce_after_product_title']) && !empty($wsppcp_hooks['woocommerce_after_product_title'])) {
+
+        echo "<div class='wsppcp_div_block woocommerce_after_product_title'>";
+        echo wp_kses_post(wsppcp_output($wsppcp_hooks['woocommerce_after_product_title']));
+        echo "</div>";
+    }
 }
 
-function woocommerce_after_product_price(){
-	$wsppcp_hooks	=	wsppcp_get_hook(); 
-			
-	echo "<div class='wsppcp_div_block woocommerce_after_product_price'>";
-	echo wsppcp_output($wsppcp_hooks['woocommerce_after_product_price']);
-	echo "</div>";
+/**
+ * Function to output content for woocommerce_after_product_price hook
+ */
+function woocommerce_after_product_price()
+{
+    $wsppcp_hooks = wsppcp_get_hook();
+    if (isset($wsppcp_hooks['woocommerce_after_product_price']) && !empty($wsppcp_hooks['woocommerce_after_product_price'])) {
+
+        echo "<div class='wsppcp_div_block woocommerce_after_product_price'>";
+        echo wp_kses_post(wsppcp_output($wsppcp_hooks['woocommerce_after_product_price']));
+        echo "</div>";
+    }
 }
 
-function woocommerce_product_thumbnails($arg) {
+/**
+ * Function to output content for woocommerce_product_thumbnails hook
+ */
+function woocommerce_product_thumbnails($arg)
+{
+    $wsppcp_hooks = wsppcp_get_hook();
+    if (isset($wsppcp_hooks['woocommerce_product_thumbnails']) && !empty($wsppcp_hooks['woocommerce_product_thumbnails'])) {
 
-	$wsppcp_hooks=wsppcp_get_hook(); 
-
-	echo "<div class='woocommerce_product_thumbnails'>";
-	echo wsppcp_output($wsppcp_hooks['woocommerce_product_thumbnails']);
-	echo "</div>";
-	
+        echo "<div class='woocommerce_product_thumbnails'>";
+        echo wp_kses_post(wsppcp_output($wsppcp_hooks['woocommerce_product_thumbnails']));
+        echo "</div>";
+    }
 }
-/** Front Side Global Content Print End */
 
-/** front side Css */
-function wsppcp_front_site_css_add() {
-    ?>
-        <style>
-             .wsppcp_div_block {
-				display: inline-block;
-				width: 100%;
-				margin-top: 10px;
-			}
-			.wsppcp_div_block.wsppcp_product_summary_text {
-				display: inline-block;
-				width: 100%;
-			}
-			.wsppcp_div_block.wsppcp_category_pos20 {
-				display: inline-block;
-				width: 100%;
-			}
-			.product-type-simple .woocommerce_product_thumbnails{
-				display: inline-block;
-				width: 100%;
-			}
-			.product-type-variable .woocommerce_product_thumbnails{
-				display: inline-block;
-			}
-        </style>
-    <?php
+/**
+ * Front side CSS
+ */
+function wsppcp_front_site_css_add()
+{
+?>
+    <style>
+        .wsppcp_div_block {
+            display: inline-block;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .wsppcp_div_block.wsppcp_product_summary_text {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .wsppcp_div_block.wsppcp_category_pos20 {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .product-type-simple .woocommerce_product_thumbnails {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .product-type-variable .woocommerce_product_thumbnails {
+            display: inline-block;
+        }
+    </style>
+<?php
 }
 add_action('wp_head', 'wsppcp_front_site_css_add');

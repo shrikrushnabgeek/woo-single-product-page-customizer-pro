@@ -32,13 +32,9 @@ class wsppcp_admin_product_page_meta_box
     */
     public function render_metabox($post)
     {
-
         wp_nonce_field('custom_nonce_action', 'custom_nonce');
 
-        $wsppcp_hooks = get_post_meta($post->ID, 'wsppcp_single_product_position', true);
-	
-
-        ?>
+        $wsppcp_hooks = get_post_meta($post->ID, 'wsppcp_single_product_position', true); ?>
         <div class="wrap wsppcp-main-box wsppcp-meta-box">
             <?php 
             if(!empty($wsppcp_hooks)){ ?>
@@ -54,8 +50,7 @@ class wsppcp_admin_product_page_meta_box
                     ?>
                     <div class="error fade"><p><?php _e($errormsg); ?></p></div>
                     <?php
-                }
-                ?>
+                } ?>
                 <ul class="wsppcp_toggle wsppcp_tab wsppcp_hooks_list">
                     <?php if(!empty($wsppcp_hooks)){ 
                         $wsppcp_hooks = array_reverse($wsppcp_hooks);
@@ -83,8 +78,6 @@ class wsppcp_admin_product_page_meta_box
                     $ajax_add_nonce = wp_create_nonce( "wsppcp_ajax_add_nonce" ); 
                     $ajax_edit_nonce = wp_create_nonce( "wsppcp_ajax_edit_nonce" );
                     $ajax_remove_nonce = wp_create_nonce( "wsppcp_ajax_remove_nonce" );
-             
-
                 ?>
                 <input type="hidden" value="<?php _e($ajax_add_nonce); ?>" name="ajax_add_nonce" class="wsppcp_ajax_add_nonce">
                 <input type="hidden" value="<?php _e($ajax_edit_nonce); ?>" name="ajax_edit_nonce" class="wsppcp_ajax_edit_nonce">
@@ -92,7 +85,6 @@ class wsppcp_admin_product_page_meta_box
 
             </div>
         </div>
-
         <?php
     }
 
@@ -105,7 +97,6 @@ class wsppcp_admin_product_page_meta_box
     */
     public function save_metabox($post_id, $post)
     {
-
         $nonce_name   = isset($_POST['custom_nonce']) ? $_POST['custom_nonce'] : '';
         $nonce_action = 'custom_nonce_action';
 
@@ -125,22 +116,17 @@ class wsppcp_admin_product_page_meta_box
             return;
         }
 
-        $single_page_hook_list = array();
-        
-        $add_position_hook = sanitize_text_field($_POST['hook']);
+        $single_page_hook_list = array();        
+        $add_position_hook = isset($_POST['hook'])? sanitize_text_field($_POST['hook']) : '';
 
         if(isset($add_position_hook) && !empty($add_position_hook)){
-
-            $content=htmlentities($_POST['wsppcp_product_content']);
-    
+            $content=htmlentities($_POST['wsppcp_product_content']);    
             $prodcut_position_hook = get_post_meta($post->ID, 'wsppcp_single_product_position', true);
             
             if(isset($prodcut_position_hook) && !empty($prodcut_position_hook)) {
                 $single_page_hook_list = $prodcut_position_hook;
-                
             }
             $single_page_hook_list[$add_position_hook] = $content;
-    
             update_post_meta($post_id, 'wsppcp_single_product_position', $single_page_hook_list);
         }
     }

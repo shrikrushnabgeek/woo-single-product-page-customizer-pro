@@ -1,16 +1,50 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
 
     var ajax_add_nonce = jQuery(".wsppcp_ajax_add_nonce").val();
     var ajax_edit_nonce = jQuery(".wsppcp_ajax_edit_nonce").val();
     var ajax_remove_nonce = jQuery(".wsppcp_ajax_remove_nonce").val();
 
 
+    /**
+     * Returns the configuration object for Select2 AJAX handler.
+     * @param {string} action - The AJAX action.
+     * @returns {object} The Select2 AJAX configuration object.
+     */
+    function select2AjaxHandler(action) {
+        return {
+            ajax: {
+                type: 'POST',
+                url: custom_call.ajaxurl,
+                dataType: 'json',
+                delay: 250,
+                data: (params) => {
+                    return {
+                        'action': action,
+                        'search': params.term,
+                        'security': ajax_add_nonce
+                    };
+                },
+                processResults: (data, params) => {
+                    const results = data.map(item => {
+                        return {
+                            id: item.id,
+                            text: item.title,
+                        };
+                    });
+                    return {
+                        results: results,
+                    };
+                },
+            },
+            minimumInputLength: 3,
+        };
+    }
 
     if (jQuery('.wsppcp_tab').children().length == 0) {
         jQuery(".wsppcp_tab").addClass("empty");
     }
 
-    jQuery(".wsppcp-position-map-accordion").on("click", function() {
+    jQuery(".wsppcp-position-map-accordion").on("click", function () {
         if (jQuery(this).hasClass('wsppcp-active-map-img')) {
             jQuery(this).removeClass('wsppcp-active-map-img');
             jQuery(".wsppcp-woo-single-page-position-map-img").fadeOut();
@@ -21,7 +55,7 @@ jQuery(document).ready(function() {
         }
     });
 
-    jQuery('.wsppcp_add_global_position').click(function() {
+    jQuery('.wsppcp_add_global_position').click(function () {
         var $curr = jQuery(this);
 
         $curr.next().css("display", "inline");
@@ -36,8 +70,9 @@ jQuery(document).ready(function() {
                 security: ajax_add_nonce,
 
             },
-            success: function(response) {
+            success: function (response) {
                 jQuery(".wsppcp_add_hook_form").html(response);
+
                 wp.editor.initialize("content_", {
                     mediaButtons: true,
                     tinymce: {
@@ -87,6 +122,17 @@ jQuery(document).ready(function() {
                 });
                 jQuery(".wsppcp_add_global_position").hide();
                 $curr.next().css("display", "none");
+
+
+                // Initialize Select2 for "#wsppcp_exclude_post" element
+                jQuery(".wsppcp_add_hook_form").find('#wsppcp_exclude_post').select2(
+                    select2AjaxHandler('wsppcp_exclude_post')
+                );
+
+                // Initialize Select2 for "#wsppcp_exclude_category" element
+                jQuery(".wsppcp_add_hook_form").find('#wsppcp_exclude_category').select2(
+                    select2AjaxHandler('wsppcp_exclude_category')
+                );
             }
         });
 
@@ -95,7 +141,7 @@ jQuery(document).ready(function() {
         }
     });
 
-    jQuery('.wsppcp_add_single_product_position').click(function() {
+    jQuery('.wsppcp_add_single_product_position').click(function () {
         var $curr = jQuery(this);
         var product_id = jQuery(this).attr('data-product-id');
         var current_page = jQuery(this).attr('data-page');
@@ -114,7 +160,7 @@ jQuery(document).ready(function() {
                 current_page: current_page
 
             },
-            success: function(response) {
+            success: function (response) {
                 jQuery(".wsppcp_add_hook_form").html(response);
                 wp.editor.initialize("content_", {
                     mediaButtons: true,
@@ -172,8 +218,8 @@ jQuery(document).ready(function() {
             jQuery(".wsppcp_tab").addClass("empty");
         }
     });
-   
-    jQuery('.wsppcp_edit_global_hook').click(function() {
+
+    jQuery('.wsppcp_edit_global_hook').click(function () {
         var main_li = jQuery(this).parent().parent();
         var hook_name = jQuery(this).attr('data-hook');
         jQuery(this).hide();
@@ -189,7 +235,7 @@ jQuery(document).ready(function() {
                 hook_name: hook_name
             },
 
-            success: function(response) {
+            success: function (response) {
 
                 tinymce.remove(".wsppcp_toggle .wsppcp_content");
                 main_li.find(".wsppcphook_details").html(response);
@@ -197,7 +243,7 @@ jQuery(document).ready(function() {
                 main_li.find(".wsppcphook_details").show();
 
                 main_li.siblings().find('.wsppcp_edit_global_hook').show();
-                
+
                 wp.editor.initialize("content_" + hook_name, {
                     mediaButtons: true,
                     tinymce: {
@@ -248,11 +294,21 @@ jQuery(document).ready(function() {
                 $curr.prev().css("display", "none");
                 $curr.closest(".edit_ajax_loader").css("display", "none");
                 jQuery(".edit_ajax_loader").closest(".edit_ajax_loader").addClass("demo_class");
+
+                // Initialize Select2 for "#wsppcp_exclude_post" element
+                jQuery(".wsppcphook_details").find('#wsppcp_exclude_post').select2(
+                    select2AjaxHandler('wsppcp_exclude_post')
+                );
+
+                // Initialize Select2 for "#wsppcp_exclude_category" element
+                jQuery(".wsppcphook_details").find('#wsppcp_exclude_category').select2(
+                    select2AjaxHandler('wsppcp_exclude_category')
+                );
             }
         });
     });
 
-    jQuery('.wsppcp_edit_single_product_hook').click(function() {
+    jQuery('.wsppcp_edit_single_product_hook').click(function () {
         var main_li = jQuery(this).parent().parent();
         var hook_name = jQuery(this).attr('data-hook');
         var product_id = jQuery(this).attr('data-product-id');
@@ -273,7 +329,7 @@ jQuery(document).ready(function() {
                 product_id: product_id,
                 current_page: current_page
             },
-            success: function(response) {
+            success: function (response) {
 
 
                 tinymce.remove(".wsppcp_toggle .wsppcp_content");
@@ -337,7 +393,7 @@ jQuery(document).ready(function() {
         });
     });
 
-    jQuery('.wsppcp_remove_global_hook').click(function() {
+    jQuery('.wsppcp_remove_global_hook').click(function () {
         if (!confirm('Are you sure remove this hook?')) {
             return false;
         }
@@ -355,12 +411,12 @@ jQuery(document).ready(function() {
                 security: ajax_remove_nonce
 
             },
-            success: function(response) {
+            success: function (response) {
                 if (response == true) {
                     main_li.remove();
                 }
 
-                if(jQuery('.wsppcp_hooks_list li').length == 0){
+                if (jQuery('.wsppcp_hooks_list li').length == 0) {
                     jQuery('#wsppcp_clear_all').hide();
                 }
                 $curr.prev().css("display", "none");
@@ -371,7 +427,7 @@ jQuery(document).ready(function() {
 
     });
 
-    jQuery('.wsppcp_remove_single_product_hook').click(function() {
+    jQuery('.wsppcp_remove_single_product_hook').click(function () {
         if (!confirm('Are you sure remove this hook?')) return false;
 
         var $curr = jQuery(this);
@@ -391,47 +447,45 @@ jQuery(document).ready(function() {
                 product_id: product_id,
                 current_page: current_page
             },
-            success: function(response) {
+            success: function (response) {
                 if (response == true) {
                     main_li.remove();
                 }
-                if(jQuery('.wsppcp_hooks_list li').length == 0){
+                if (jQuery('.wsppcp_hooks_list li').length == 0) {
                     jQuery('#wsppcp_clear_all').hide();
                 }
 
                 $curr.closest("li").css("display", "none");
-
-                // jQuery(".wsppcp_add_hook_form").html(response);				 
             }
         });
 
     });
 
     /** Admin Panel Clear All Form START */
-    jQuery('#wsppcp_clear_all').click(function() {
-        if (!confirm('Are You Sure You Want to Remove All?'))   return false;
-        if(jQuery('.wsppcp_hooks_list li').length == 0)         return false
+    jQuery('#wsppcp_clear_all').click(function () {
+        if (!confirm('Are You Sure You Want to Remove All?')) return false;
+        if (jQuery('.wsppcp_hooks_list li').length == 0) return false
 
         var $curr = jQuery(this);
         $curr.prev().css("display", "inline");
-        
+
         var product_id = current_page = null;
-        product_id          = jQuery(this).attr('data-product-id');
-        current_page        = jQuery(this).attr('data-page');
+        product_id = jQuery(this).attr('data-product-id');
+        current_page = jQuery(this).attr('data-page');
 
         var data = {
-            action:     'wsppcp_clear_all',
-            security:   ajax_remove_nonce
+            action: 'wsppcp_clear_all',
+            security: ajax_remove_nonce
         }
 
-        if(product_id !== null)     data.product_id     = product_id;
-        if(current_page !== null)   data.current_page   = current_page;
-       
+        if (product_id !== null) data.product_id = product_id;
+        if (current_page !== null) data.current_page = current_page;
+
         jQuery.ajax({
             url: custom_call.ajaxurl,
             type: 'post',
             data: data,
-            success: function(response) {
+            success: function (response) {
                 if (response == true) {
                     $curr.prev().css("display", "none");
                     jQuery('.wsppcp_hooks_list li').remove();
@@ -444,10 +498,10 @@ jQuery(document).ready(function() {
 
 
     /** Remove Content Tab JS Strat */
-    jQuery("#wsppcp_single_page").click(function() {
+    jQuery("#wsppcp_single_page").click(function () {
         jQuery("input:checkbox[name='wsppcp_single_checkbox[]']").not(this).prop('checked', this.checked);
     });
     /** Remove Content Tab JS End */
 
-
 });
+
