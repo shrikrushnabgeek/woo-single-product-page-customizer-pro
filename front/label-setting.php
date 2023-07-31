@@ -27,19 +27,31 @@ class wsppcp_label_customizer {
                     add_filter('woocommerce_sale_flash', array($this, 'wsppcp_customize_woocommerce_sale_flash'), 60, 3);
                     break;
                 case 'wsppcp_default_attribute_options':
-                    if (!empty($filter_value)) {
-                        add_filter('woocommerce_dropdown_variation_attribute_options_args', array($this, 'customize_dropdown_variation_attribute_options'), 60, 3);
-                    }
+                    add_filter('woocommerce_dropdown_variation_attribute_options_args', array($this, 'customize_dropdown_variation_attribute_options'), 60);
                     break;
                 case 'wsppcp_related_product_no':
-                    if (!empty($filter_value)) {
-                        add_filter('woocommerce_output_related_products_args', array($this, 'customize_related_products'), 60, 3);
-                    }
+                    add_filter('woocommerce_output_related_products_args', array($this, 'customize_related_products'), 60);
                     break;
                 case 'wsppcp_related_product_column':
-                    if (!empty($filter_value)) {
-                        add_filter('woocommerce_output_related_products_args', array($this, 'customize_related_products'), 60, 3);
-                    }
+                    add_filter('woocommerce_output_related_products_args', array($this, 'customize_related_products'), 60);
+                    break;
+                case 'woocommerce_product_single_add_to_cart_text':
+                    add_filter('woocommerce_product_single_add_to_cart_text', array($this, 'customize_add_to_cart_text'), 60);
+                    break;
+                case 'woocommerce_product_description_tab_title':
+                    add_filter('woocommerce_product_description_tab_title', array($this, 'customize_product_description_tab_title'), 60);
+                    break;
+                case 'woocommerce_product_additional_information_tab_title':
+                    add_filter('woocommerce_product_additional_information_tab_title', array($this, 'customize_additional_information_tab_title'), 60);
+                    break;
+                case 'woocommerce_product_related_products_heading':
+                    add_filter('woocommerce_product_related_products_heading', array($this, 'customize_product_related_products_heading'), 60);
+                    break;
+                case 'woocommerce_product_additional_information_heading':
+                    add_filter('woocommerce_product_additional_information_heading', array($this, 'customize_product_additional_information_heading'), 60);
+                    break;
+                case 'woocommerce_product_description_heading':
+                    add_filter('woocommerce_product_description_heading', array($this, 'customize_product_description_heading'), 60);
                     break;
                 default:
                     add_filter($filter_name, array($this, 'customize'), 60);
@@ -56,22 +68,71 @@ class wsppcp_label_customizer {
             // If 'customizer_true' is provided, return true, otherwise, return the configured value
             return 'customizer_true' === $this->filters[$current_filter];
         }
+        return $title;
+    }
 
+    //change add to cart button text
+    public function customize_add_to_cart_text($title) {
+        if(isset($this->filters['woocommerce_product_single_add_to_cart_text']) && !empty($this->filters['woocommerce_product_single_add_to_cart_text'])){
+            $title = $this->filters['woocommerce_product_single_add_to_cart_text'];
+        }
+        return $title;
+    }
+
+    //change product description tab title
+    public function customize_product_description_tab_title($title){
+        if(isset($this->filters['woocommerce_product_description_tab_title']) && !empty($this->filters['woocommerce_product_description_tab_title'])){
+            $title = $this->filters['woocommerce_product_description_tab_title'];
+        }        
+        return $title;
+    }
+
+    //change additional information tab title
+    public function customize_additional_information_tab_title($title){
+        if(isset($this->filters['woocommerce_product_additional_information_tab_title']) && !empty($this->filters['woocommerce_product_additional_information_tab_title'])){
+            $title = $this->filters['woocommerce_product_additional_information_tab_title'];
+        }
+        return $title;
+    }
+
+    //change additional information heading
+    public function customize_product_additional_information_heading($title){
+        if(isset($this->filters['woocommerce_product_additional_information_heading']) && !empty($this->filters['woocommerce_product_additional_information_heading'])){
+            $title = $this->filters['woocommerce_product_additional_information_heading'];
+        }        
+        return $title;
+    }
+
+    //change product description heading
+    public function customize_product_description_heading($title){
+        if(isset($this->filters['woocommerce_product_description_heading']) && !empty($this->filters['woocommerce_product_description_heading'])){
+            $title = $this->filters['woocommerce_product_description_heading'];
+        }        
+        return $title;
+    }
+
+    //change related products title
+    public function customize_product_related_products_heading($title){
+        if(isset($this->filters['woocommerce_product_related_products_heading']) && !empty($this->filters['woocommerce_product_related_products_heading'])){
+            $title = $this->filters['woocommerce_product_related_products_heading'];
+        }        
         return $title;
     }
 
     // Change the review tab title
     public function change_review_tab_title($title) {
         global $product;
-
-        $customize_title = $this->filters['woocommerce_product_reviews_tab_title'];
-        $review_count = $product->get_review_count();
-        $title = str_replace("{count}", $review_count, $customize_title);
+        if(isset($this->filters['woocommerce_product_reviews_tab_title']) && !empty($this->filters['woocommerce_product_reviews_tab_title'])) {
+            $customize_title = $this->filters['woocommerce_product_reviews_tab_title'];
+            $review_count = $product->get_review_count();
+            $title = str_replace("{count}", $review_count, $customize_title);
+        }
         return $title;
     }
 
     // Customize the out-of-stock text
-    public function customize_single_out_of_stock_text($text, $product) {
+    public function customize_single_out_of_stock_text($text) {
+        global $product;
         if (!$product->is_in_stock() && isset($this->filters['wsppcp_out_of_stock_text'])) {
             return $this->filters['wsppcp_out_of_stock_text'];
         }
@@ -103,17 +164,19 @@ class wsppcp_label_customizer {
 
     // Customize the dropdown variation attribute options
     public function customize_dropdown_variation_attribute_options($args) {
-        $args['show_option_none'] = $this->filters['wsppcp_default_attribute_options'];
+        if(isset($this->filters['wsppcp_default_attribute_options']) && !empty($this->filters['wsppcp_default_attribute_options'])) {
+            $args['show_option_none'] = $this->filters['wsppcp_default_attribute_options'];
+        }
         return $args;
     }
 
     // Customize the number of related products per post and related products column
     public function customize_related_products($args) {
-        if (isset($this->filters['wsppcp_related_product_no'])) {
+        if (isset($this->filters['wsppcp_related_product_no']) && !empty($this->filters['wsppcp_related_product_no'])) {
             $args['posts_per_page'] = $this->filters['wsppcp_related_product_no'];
         }
 
-        if (isset($this->filters['wsppcp_related_product_column'])) {
+        if (isset($this->filters['wsppcp_related_product_column']) && !empty($this->filters['wsppcp_related_product_column'])) {
             $args['columns'] = $this->filters['wsppcp_related_product_column'];
         }
 

@@ -3,14 +3,14 @@
 Plugin Name: Woocommerce Single Product Page Customizer Pro
 Description: By using this smart plugin, allows you to add text or HTML in wooocommerce Single product page , no need to edit theme and woocommerce plugin!
 Author: Geek Code Lab
-Version: 1.6
+Version: 1.7
 WC tested up to: 7.9.0
 Author URI: https://geekcodelab.com/
 Text Domain : woo-single-product-page-customizer-pro
 */
 if( !defined( 'ABSPATH' ) ) exit;
 
-define("WSPPCP_BUILD", '1.6');
+define("WSPPCP_BUILD", '1.7');
 
 require_once( plugin_dir_path (__FILE__) .'functions.php' );
 
