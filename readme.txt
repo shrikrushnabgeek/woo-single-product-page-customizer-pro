@@ -6,7 +6,7 @@ Requires PHP: 5.2.4
 Requires at least: 3.0.1
 WC tested up to: 7.9.0
 Tested up to: 6.2.2
-Stable tag: 1.7
+Stable tag: 1.8
 
 By using this smart plugin, allows you to add text or HTML in wooocommerce Single product page, no need to edit theme and woocommerce plugin!
 
@@ -74,6 +74,9 @@ After active plugin go to Woocommerce->Woocommerce Single Product Page Customize
 
 
 == Changelog ==
+= 1.8 =
+ Fixed WooCommerce Product Thumbnails Position Issue.
+
 = 1.7 =
  Fixed Bug.
 
