@@ -101,7 +101,7 @@ if (!class_exists('wsppcp_product_categories_hook_content')) {
 					'priority'                  => $this->wsppcp_priority,
 				),
 				'woocommerce_product_thumbnails' => array(
-					'action-hook'               => 'woocommerce_after_single_product_summary',
+					'action-hook'               => 'woocommerce_product_thumbnails',
 					'remove-action-callback'    => 'woocommerce_product_thumbnails',
 					'priority'                  => 5,
 				),

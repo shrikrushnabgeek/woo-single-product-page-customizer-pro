@@ -56,7 +56,7 @@ function global_content_print_function()
                             break;
 
                         case 'woocommerce_product_thumbnails':
-                            add_action('woocommerce_after_single_product_summary', 'woocommerce_product_thumbnails', 5);
+                            add_action('woocommerce_product_thumbnails', 'woocommerce_product_thumbnails', 5);
                             break;
 
                         default:
