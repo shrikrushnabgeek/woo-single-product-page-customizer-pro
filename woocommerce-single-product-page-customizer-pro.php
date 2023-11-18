@@ -10,7 +10,7 @@ Text Domain : woo-single-product-page-customizer-pro
 */
 if( !defined( 'ABSPATH' ) ) exit;
 
-define("WSPPCP_BUILD", '1.8');
+define("WSPPCP_BUILD", '1.9');
 
 require_once( plugin_dir_path (__FILE__) .'functions.php' );
 
