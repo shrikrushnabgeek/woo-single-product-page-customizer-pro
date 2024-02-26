@@ -200,9 +200,9 @@ if(isset($label_options['wsppcp_related_product_column']))							$related_produc
 		echo $successmsg;
 	}?>
 	<nav class="nav-tab-wrapper">
-		<a href="?page=wsppcp-woocommerce-single-product-page-customizer" class="nav-tab <?php if ($tab === null) : ?>nav-tab-active<?php endif; ?>"><?php _e('General Setting', 'woo-donations-pro'); ?></a>
-		<a href="?page=wsppcp-woocommerce-single-product-page-customizer&tab=remove-content" class="nav-tab <?php if ($tab === 'remove-content') : ?>nav-tab-active<?php endif; ?>"><?php _e('Remove Content', 'woo-donations-pro'); ?></a>
-		<a href="?page=wsppcp-woocommerce-single-product-page-customizer&tab=label-setting" class="nav-tab <?php if ($tab === "label-setting") : ?>nav-tab-active<?php endif; ?>"><?php _e('Labels Setting', 'woo-donations-pro'); ?></a>
+		<a href="?page=wsppcp-woocommerce-single-product-page-customizer" class="nav-tab <?php if ($tab === null) : ?>nav-tab-active<?php endif; ?>"><?php _e('General Setting', 'woo-single-product-page-customizer-pro'); ?></a>
+		<a href="?page=wsppcp-woocommerce-single-product-page-customizer&tab=remove-content" class="nav-tab <?php if ($tab === 'remove-content') : ?>nav-tab-active<?php endif; ?>"><?php _e('Remove Content', 'woo-single-product-page-customizer-pro'); ?></a>
+		<a href="?page=wsppcp-woocommerce-single-product-page-customizer&tab=label-setting" class="nav-tab <?php if ($tab === "label-setting") : ?>nav-tab-active<?php endif; ?>"><?php _e('Labels Setting', 'woo-single-product-page-customizer-pro'); ?></a>
 	</nav>
 
 	<!-- General Setting Tabbing Html Start -->
