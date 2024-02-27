@@ -2,11 +2,11 @@
 Contributors: rajkakadiya, rvadhel
 Donate link: https://paypal.me/rvadhel
 Tags: woocommerce customize, single product page, insert html in product page, single product page customize
-Requires PHP: 5.2.4
-Requires at least: 3.0.1
-WC tested up to: 8.3.0
-Tested up to: 6.4.1
-Stable tag: 1.9
+Requires PHP: 7.4
+Requires at least: 6.4
+WC tested up to: 8.6.1
+Tested up to: 6.4.2
+Stable tag: 2.0
 
 By using this smart plugin, allows you to add text or HTML in wooocommerce Single product page, no need to edit theme and woocommerce plugin!
 
@@ -74,6 +74,9 @@ After active plugin go to Woocommerce->Woocommerce Single Product Page Customize
 
 
 == Changelog ==
+= 2.0 =
+ Fixed bugs
+
 = 1.9 =
  Added woocommerce HPOS support.
  Tested up to 6.4 wordpress version.

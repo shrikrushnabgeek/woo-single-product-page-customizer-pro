@@ -3,14 +3,14 @@
 Plugin Name: Woocommerce Single Product Page Customizer Pro
 Description: By using this smart plugin, allows you to add text or HTML in wooocommerce Single product page , no need to edit theme and woocommerce plugin!
 Author: Geek Code Lab
-Version: 1.9
-WC tested up to: 8.3.0
+Version: 2.0
+WC tested up to: 8.6.1
 Author URI: https://geekcodelab.com/
 Text Domain : woo-single-product-page-customizer-pro
 */
 if( !defined( 'ABSPATH' ) ) exit;
 
-define("WSPPCP_BUILD", '1.9');
+define("WSPPCP_BUILD", '2.0');
 
 require_once( plugin_dir_path (__FILE__) .'functions.php' );
 
@@ -45,9 +45,6 @@ function wsppcp_admin_menu_single_product_page_customizer(){
 	add_submenu_page( 'woocommerce','Single Product Page Customizer pro', 'Single Product Page Customizer pro', 'manage_options', 'wsppcp-woocommerce-single-product-page-customizer', 'wsppcp_single_product_page_setting');
 }
 function wsppcp_single_product_page_setting(){
-	if(!current_user_can('manage_options') ){
-		wp_die( __('You do not have sufficient permissions to access this page.') );
-	}
 	include( plugin_dir_path( __FILE__ ) . 'admin/options.php' );
 }
 require_once(plugin_dir_path( __FILE__ ) . 'admin/product-meta.php' );
@@ -61,8 +58,8 @@ require_once(plugin_dir_path( __FILE__ ) . 'front/label-setting.php' );
 /**Avtivation Hook Start */
 register_activation_hook( __FILE__, 'wsppcp_plugin_active_single_product_page_customizert' );
 function wsppcp_plugin_active_single_product_page_customizert(){
-	if (is_plugin_active( 'woocommerce-single-product-page-customizer/woocommerce-single-product-page-customizer.php' ) ) {		
-		deactivate_plugins('woocommerce-single-product-page-customizer/woocommerce-single-product-page-customizer.php');
+	if (is_plugin_active( 'woo-single-product-page-customizer/woocommerce-single-product-page-customizer.php' ) ) {		
+		deactivate_plugins('woo-single-product-page-customizer/woocommerce-single-product-page-customizer.php');
    	} 
 
 	$free_options = get_option('wsppc_hook');
@@ -85,7 +82,7 @@ if ( ! function_exists( 'wsppcp_install_woocommerce_admin_notice' ) ) {
 			<p>
 				<?php
 				// translators: %s is the plugin name.
-				echo esc_html( sprintf( __( '%s is enabled but not effective. It requires WooCommerce in order to work.', 'woo-single-product-page-customizer-pro' ), 'Woocommerce Single Product Page Customizer Pro' ) );
+				echo esc_html__( sprintf( '%s is enabled but not effective. It requires WooCommerce in order to work.', 'Woocommerce Single Product Page Customizer Pro' ), 'woo-single-product-page-customizer-pro' );
 				?>
 			</p>
 		</div>
@@ -106,10 +103,10 @@ add_action( 'plugins_loaded', 'wsppcp_woocommerce_constructor' );
 $plugin = plugin_basename(__FILE__);
 add_filter( "plugin_action_links_$plugin", 'wsppcp_add_plugin_settings_link');
 function wsppcp_add_plugin_settings_link( $links ) {
-	$support_link = '<a href="https://geekcodelab.com/contact/"  target="_blank" >' . __( 'Support', 'woocommerce-single-product-page-customizer' ) . '</a>'; 
+	$support_link = '<a href="https://geekcodelab.com/contact/"  target="_blank" >' . __( 'Support', 'woo-single-product-page-customizer-pro' ) . '</a>'; 
 	array_unshift( $links, $support_link );
 
-	$settings_link = '<a href="'. admin_url() .'admin.php?page=wsppcp-woocommerce-single-product-page-customizer">' . __( 'Settings', 'wsppcp-woocommerce-single-product-page-customizer' ) . '</a>';
+	$settings_link = '<a href="'. admin_url() .'admin.php?page=wsppcp-woocommerce-single-product-page-customizer">' . __( 'Settings', 'woo-single-product-page-customizer-pro' ) . '</a>';
 	array_unshift( $links, $settings_link );
 
 	return $links;

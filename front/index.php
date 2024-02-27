@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Front Side Global Content Print Start
  */
