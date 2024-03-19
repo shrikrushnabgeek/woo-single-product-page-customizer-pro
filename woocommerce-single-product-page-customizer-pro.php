@@ -62,10 +62,12 @@ function wsppcp_plugin_active_single_product_page_customizert(){
 	if (is_plugin_active( 'woo-single-product-page-customizer/woocommerce-single-product-page-customizer.php' ) ) {		
 		deactivate_plugins('woo-single-product-page-customizer/woocommerce-single-product-page-customizer.php');
    	} 
-
+	$pro_options = get_option('wsppcp_hook');
 	$free_options = get_option('wsppc_hook');
-	if(isset($free_options) && !empty($free_options)){
-		update_option('wsppcp_hook',$free_options);
+	if(!$pro_options) {
+		if(isset($free_options) && !empty($free_options)){
+			update_option('wsppcp_hook',$free_options);
+		}
 	}
 
 	$wsppcp_hook_exclude = get_option('wsppcp_hook_exclude');
