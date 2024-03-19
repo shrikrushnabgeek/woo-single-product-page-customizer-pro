@@ -148,7 +148,9 @@ function woocommerce_single_after_product_thumbnails() {
     $wsppcp_hooks = wsppcp_get_hook();
     if (isset($wsppcp_hooks['woocommerce_after_product_thumbnails']) && !empty($wsppcp_hooks['woocommerce_after_product_thumbnails'])) {
         echo '<div class="woocommerce-after-product-thumbnails-script"><script type="text/javascript">';
-        echo 'window.addEventListener("load",function(){if(document.querySelectorAll(".woocommerce-product-gallery").length>0&&document.querySelectorAll(".woocommerce-product-gallery").length>0){var e=document.querySelector(".woocommerce-product-gallery"),r=document.createElement("div");r.className="woocommerce_after_product_thumbnails",r.innerHTML="'.wp_kses_post(wsppcp_output($wsppcp_hooks['woocommerce_after_product_thumbnails'])).'",e.appendChild(r)}});';
+        echo 'window.addEventListener("load",function(){if(document.querySelectorAll(".woocommerce-product-gallery").length>0&&document.querySelectorAll(".woocommerce-product-gallery").length>0){var e=document.querySelector(".woocommerce-product-gallery"),r=document.createElement("div");r.className="woocommerce_after_product_thumbnails",r.innerHTML=';
+        echo "'".wp_kses_post(wsppcp_output($wsppcp_hooks['woocommerce_after_product_thumbnails']))."'";
+        echo ',e.appendChild(r)}});';
         echo '</script></div>';
     }
 }

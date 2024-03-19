@@ -163,7 +163,11 @@ if (!class_exists('wsppcp_product_categories_hook_content')) {
                             foreach ($all_categories_hook as $key => $wsppcp_hook) {
 								if($key == "woocommerce_after_product_thumbnails") {
 									echo '<div class="woocommerce-after-product-thumbnails-script"><script type="text/javascript">';
-									echo 'window.addEventListener("load",function(){var e=document.querySelector(".woocommerce-product-gallery");if(e){var r=e.querySelector(".woocommerce_after_product_thumbnails");if(r)r.innerHTML="'.wsppcp_output($wsppcp_hook).'";else{var o=document.createElement("div");o.className="woocommerce_after_product_thumbnails",o.innerHTML="'.wsppcp_output($wsppcp_hook).'",e.appendChild(o)}}});';
+									echo 'window.addEventListener("load",function(){var e=document.querySelector(".woocommerce-product-gallery");if(e){var r=e.querySelector(".woocommerce_after_product_thumbnails");if(r)r.innerHTML=';
+									echo "'".wsppcp_output($wsppcp_hook)."'";
+									echo ';else{var o=document.createElement("div");o.className="woocommerce_after_product_thumbnails",o.innerHTML=';
+									echo "'".wsppcp_output($wsppcp_hook)."'";
+									echo ',e.appendChild(o)}}});';
 									echo '</script></div>';
 									$inner_count++;
 									continue;
@@ -214,7 +218,11 @@ if (!class_exists('wsppcp_product_categories_hook_content')) {
 						foreach ($single_page_hook_list as $key => $wsppcp_hook) {
 							if($key == "woocommerce_after_product_thumbnails") {
 								echo '<div class="woocommerce-after-product-thumbnails-script"><script type="text/javascript">';
-								echo 'window.addEventListener("load",function(){var e=document.querySelector(".woocommerce-product-gallery");if(e){var r=e.querySelector(".woocommerce_after_product_thumbnails");if(r)r.innerHTML="'.wsppcp_output($wsppcp_hook).'";else{var o=document.createElement("div");o.className="woocommerce_after_product_thumbnails",o.innerHTML="'.wsppcp_output($wsppcp_hook).'",e.appendChild(o)}}});';
+								echo 'window.addEventListener("load",function(){var e=document.querySelector(".woocommerce-product-gallery");if(e){var r=e.querySelector(".woocommerce_after_product_thumbnails");if(r)r.innerHTML=';
+								echo "'".wsppcp_output($wsppcp_hook)."'";
+								echo ';else{var o=document.createElement("div");o.className="woocommerce_after_product_thumbnails",o.innerHTML=';
+								echo "'".wsppcp_output($wsppcp_hook)."'";
+								echo ',e.appendChild(o)}}});';
 								echo '</script></div>';
 								$inner_count++;
 								continue;
