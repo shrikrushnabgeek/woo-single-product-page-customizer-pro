@@ -1,7 +1,7 @@
 <?php
 // Ensure the class is not already defined before declaring it
 if (!class_exists('wsppcp_product_categories_hook_content')) {
-	#[AllowDynamicProperties]
+
 	class wsppcp_product_categories_hook_content
     {
         // Properties
@@ -115,7 +115,7 @@ if (!class_exists('wsppcp_product_categories_hook_content')) {
 					'remove-action-callback'    => $this->wsppcp_remove_action_hook,
 					'priority'                  => $this->wsppcp_priority,
 				),
-
+				'woocommerce_after_product_thumbnails' => array(),
 			);
         }
 
@@ -161,6 +161,18 @@ if (!class_exists('wsppcp_product_categories_hook_content')) {
                         if (!empty($all_categories_hook) && count($all_categories_hook) != 0) {
                             $this->wsppcp_content_classes = $this->wsppcp_content_actions();
                             foreach ($all_categories_hook as $key => $wsppcp_hook) {
+								if($key == "woocommerce_after_product_thumbnails") {
+									echo '<div class="woocommerce-after-product-thumbnails-script"><script type="text/javascript">';
+									echo 'window.addEventListener("load",function(){var e=document.querySelector(".woocommerce-product-gallery");if(e){var r=e.querySelector(".woocommerce_after_product_thumbnails");if(r)r.innerHTML=';
+									echo "'".wsppcp_output($wsppcp_hook)."'";
+									echo ';else{var o=document.createElement("div");o.className="woocommerce_after_product_thumbnails",o.innerHTML=';
+									echo "'".wsppcp_output($wsppcp_hook)."'";
+									echo ',e.appendChild(o)}}});';
+									echo '</script></div>';
+									$inner_count++;
+									continue;
+								}
+								
                                 if (array_key_exists($key, $this->wsppcp_content_classes)) {
                                     $wsppcp_content_actions_key = $this->wsppcp_content_classes[$key];
                                     $this->categories_positions[$key][] = $wsppcp_hook;
@@ -169,7 +181,7 @@ if (!class_exists('wsppcp_product_categories_hook_content')) {
                                     $this->{'callback_'. $key } = function() use ($key, $inner_count) {
 										if(isset($this->categories_positions[$key])) {
                                         	foreach ($this->categories_positions[$key] as $value) {
-												if(isset($value) && !empty($value)){
+												if(isset($value) && !empty($value)) {
 													echo sprintf( "<div class='wsppcp_div_block wsppcp_category_pos%s'>%s</div>", $inner_count, wsppcp_output($value) );
 												}
 											}
@@ -177,8 +189,8 @@ if (!class_exists('wsppcp_product_categories_hook_content')) {
                                     };
 
                                     // Remove the original action hook and add the custom hook
-                                    remove_action($wsppcp_content_actions_key['action-hook'], $wsppcp_content_actions_key['remove-action-callback'], $wsppcp_content_actions_key['priority']);
-                                    if(isset($this->{'callback_'. $key }))	add_action($wsppcp_content_actions_key['action-hook'], $this->{'callback_'. $key }, $wsppcp_content_actions_key['priority']);
+                                    if(isset($wsppcp_content_actions_key['action-hook']) && !empty($wsppcp_content_actions_key))	remove_action($wsppcp_content_actions_key['action-hook'], $wsppcp_content_actions_key['remove-action-callback'], $wsppcp_content_actions_key['priority']);
+                                    if(isset($this->{'callback_'. $key }) && isset($wsppcp_content_actions_key) && !empty($wsppcp_content_actions_key))		add_action($wsppcp_content_actions_key['action-hook'], $this->{'callback_'. $key }, $wsppcp_content_actions_key['priority']);
                                 }
                                 $inner_count++;
                             }
@@ -204,6 +216,18 @@ if (!class_exists('wsppcp_product_categories_hook_content')) {
 					$inner_count = 1;
 					if (!empty($single_page_hook_list) && isset($single_page_hook_list)) {
 						foreach ($single_page_hook_list as $key => $wsppcp_hook) {
+							if($key == "woocommerce_after_product_thumbnails") {
+								echo '<div class="woocommerce-after-product-thumbnails-script"><script type="text/javascript">';
+								echo 'window.addEventListener("load",function(){var e=document.querySelector(".woocommerce-product-gallery");if(e){var r=e.querySelector(".woocommerce_after_product_thumbnails");if(r)r.innerHTML=';
+								echo "'".wsppcp_output($wsppcp_hook)."'";
+								echo ';else{var o=document.createElement("div");o.className="woocommerce_after_product_thumbnails",o.innerHTML=';
+								echo "'".wsppcp_output($wsppcp_hook)."'";
+								echo ',e.appendChild(o)}}});';
+								echo '</script></div>';
+								$inner_count++;
+								continue;
+							}
+
 							if (array_key_exists($key, $wsppcp_content_classes)) {
 								$wsppcp_content_actions_key = $wsppcp_content_classes[$key];
 								$this->product_positions[$key][] = $wsppcp_hook;
@@ -212,16 +236,18 @@ if (!class_exists('wsppcp_product_categories_hook_content')) {
 								$wsppcp_product_function = function() use ($key, $inner_count) {
 									if(isset($this->product_positions[$key])) {
 										foreach ($this->product_positions[$key] as $value) {
-											if(isset($value) && !empty($value))
+											if(isset($value) && !empty($value)) {
 												echo sprintf( "<div class='wsppcp_div_block wsppcp_category_pos%s'>%s</div>", $inner_count, wsppcp_output($value) );
+											}
 										}
+										
 									}
 								};
 
 								// Remove the original action hook and add the custom hook
-								remove_action($wsppcp_content_actions_key['action-hook'], $wsppcp_content_actions_key['remove-action-callback'], $wsppcp_content_actions_key['priority']);
-								if(isset($this->{'callback_'. $key })) remove_action($wsppcp_content_actions_key['action-hook'], $this->{'callback_'. $key }, $wsppcp_content_actions_key['priority']);
-								add_action($wsppcp_content_actions_key['action-hook'], $wsppcp_product_function, $wsppcp_content_actions_key['priority']);
+								if(isset($wsppcp_content_actions_key) && !empty($wsppcp_content_actions_key))	remove_action($wsppcp_content_actions_key['action-hook'], $wsppcp_content_actions_key['remove-action-callback'], $wsppcp_content_actions_key['priority']);
+								if(isset($this->{'callback_'. $key }) && isset($wsppcp_content_actions_key) && !empty($wsppcp_content_actions_key)) remove_action($wsppcp_content_actions_key['action-hook'], $this->{'callback_'. $key }, $wsppcp_content_actions_key['priority']);
+								if(isset($wsppcp_content_actions_key) && !empty($wsppcp_content_actions_key)) 	add_action($wsppcp_content_actions_key['action-hook'], $wsppcp_product_function, $wsppcp_content_actions_key['priority']);
 							}
 							$inner_count++;
 						}
