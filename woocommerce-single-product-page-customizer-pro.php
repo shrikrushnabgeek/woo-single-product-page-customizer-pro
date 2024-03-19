@@ -3,14 +3,14 @@
 Plugin Name: Woocommerce Single Product Page Customizer Pro
 Description: By using this smart plugin, allows you to add text or HTML in wooocommerce Single product page , no need to edit theme and woocommerce plugin!
 Author: Geek Code Lab
-Version: 2.0
+Version: 2.1
 WC tested up to: 8.6.1
 Author URI: https://geekcodelab.com/
 Text Domain : woo-single-product-page-customizer-pro
 */
 if( !defined( 'ABSPATH' ) ) exit;
 
-define("WSPPCP_BUILD", '2.0');
+define("WSPPCP_BUILD", '2.1');
 
 require_once( plugin_dir_path (__FILE__) .'functions.php' );
 
@@ -36,6 +36,7 @@ $hook_list=array(
 	'woocommerce_product_thumbnails',
 	'woocommerce_after_single_product_summary',
 	'woocommerce_after_single_product',
+	'woocommerce_after_product_thumbnails'
 );
 
 
@@ -112,8 +113,7 @@ function wsppcp_add_plugin_settings_link( $links ) {
 	return $links;
 }
 
-/** Admin Site Add Css And Script Start */
-add_action( 'admin_footer', 'wsppcp_enqueue_styles_scripts' );
+/** Admin side Add Css And Script Start */
 function wsppcp_enqueue_styles_scripts(){
     if( is_admin() ) {
         $css= plugins_url() . '/'.  basename(dirname(__FILE__)) . "/admin/assets/css/wsppcp_style.css";     
@@ -126,6 +126,7 @@ function wsppcp_enqueue_styles_scripts(){
 		wp_localize_script( 'wsppcp-custom', 'custom_call', [ 'ajaxurl' => admin_url('admin-ajax.php') ] );
     }
 }
+add_action( 'admin_footer', 'wsppcp_enqueue_styles_scripts' );
 
 /**
  * Added HPOS support for woocommerce

@@ -5,7 +5,7 @@ function wsppcp_remove_content_single_product_page(){
 	
 	$wsppcp_get_wc_single_opt=get_option('wsppcp_hide_single_page_conetnt_hook');
 	$wsppcp_wc_hooks=json_decode($wsppcp_get_wc_single_opt);
-	if(!empty($wsppcp_wc_hooks)){		
+	if(!empty($wsppcp_wc_hooks)) {
 		foreach($wsppcp_wc_hooks as $wsppcp_wc_key => $wsppcp_wc_hook)
 		{
 			if($wsppcp_wc_hook  == "woocommerce_template_single_title"){

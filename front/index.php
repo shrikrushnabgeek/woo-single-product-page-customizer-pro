@@ -58,6 +58,10 @@ function global_content_print_function()
                             add_action('woocommerce_product_thumbnails', 'woocommerce_product_thumbnails', 5);
                             break;
 
+                        case 'woocommerce_after_product_thumbnails':
+                            add_action('wp_footer', 'woocommerce_single_after_product_thumbnails', 10);
+                            break;
+
                         default:
                             add_action($key, 'wsppcp_single_product_page_hook', 10);
                             break;
@@ -134,6 +138,18 @@ function woocommerce_product_thumbnails($arg)
         echo "<div class='woocommerce_product_thumbnails'>";
         echo wp_kses_post(wsppcp_output($wsppcp_hooks['woocommerce_product_thumbnails']));
         echo "</div>";
+    }
+}
+
+/**
+ * Function to output content for woocommerce_after_product_thumbnails hook
+ */
+function woocommerce_single_after_product_thumbnails() {
+    $wsppcp_hooks = wsppcp_get_hook();
+    if (isset($wsppcp_hooks['woocommerce_after_product_thumbnails']) && !empty($wsppcp_hooks['woocommerce_after_product_thumbnails'])) {
+        echo '<div class="woocommerce-after-product-thumbnails-script"><script type="text/javascript">';
+        echo 'window.addEventListener("load",function(){if(document.querySelectorAll(".woocommerce-product-gallery").length>0&&document.querySelectorAll(".woocommerce-product-gallery").length>0){var e=document.querySelector(".woocommerce-product-gallery"),r=document.createElement("div");r.className="woocommerce_after_product_thumbnails",r.innerHTML="'.wp_kses_post(wsppcp_output($wsppcp_hooks['woocommerce_after_product_thumbnails'])).'",e.appendChild(r)}});';
+        echo '</script></div>';
     }
 }
 
