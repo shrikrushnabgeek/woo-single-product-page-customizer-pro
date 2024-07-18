@@ -30,12 +30,18 @@ function wsppcp_get_hook_value($hook){
 	return $all_hook[$hook];
 }
 
-function wsppcp_output($meta){
+function wsppcp_output($meta, $encode = false){
 	if ( empty( $meta ) ) {
 		return;
 	}
 	if ( trim( $meta ) == '' ) {
 		return;
 	}
-	return do_shortcode(html_entity_decode(wp_unslash( $meta )));
+	$data = do_shortcode(html_entity_decode(wp_unslash( $meta )));
+
+	if($encode) {
+		return htmlspecialchars($data);
+	}
+
+	return $data;
 }

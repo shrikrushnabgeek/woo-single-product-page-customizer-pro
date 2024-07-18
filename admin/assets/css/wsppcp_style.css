@@ -294,6 +294,9 @@ ul.wsppcp_tab li span.wsppcp_hook_action a.wsppcp_cancel_hook:before {
 .wsppcp-categories-box .wsppcp_form table.form-table th > span:first-child {
   width: 20%;
 }
+.wsppcp-tags-box .wsppcp_form table.form-table th > span:first-child {
+  width: 20%;
+}
 
 ul.wsppcp_tab li span.wsppcp_hook_action a.wsppcp_remove_hook:before {
   content: "\f182";
@@ -546,8 +549,16 @@ section:empty {
 .wrap.wsppcp-main-box.wsppcp-categories-box {
   padding: 30px 20px 40px 20px;
 }
+.wrap.wsppcp-main-box.wsppcp-tags-box {
+  padding: 30px 20px 40px 20px;
+}
 
 .wsppcp-category-title .wsppcp-h2-title {
+  margin: 0;
+  padding: 0;
+  font-size: 24px;
+}
+.wsppcp-tag-title .wsppcp-h2-title {
   margin: 0;
   padding: 0;
   font-size: 24px;
