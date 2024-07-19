@@ -51,7 +51,7 @@ ul.wsppcp_tab li > span.wsppcp_hook_name {
 }
 
 .wsppcphook_details .form-table th.wsppcp_exclude_dropdown_wrap, .wsppcp_add_hook_form .form-table th.wsppcp_exclude_dropdown_wrap {
-  width: 500px;
+  width: 31%;
   max-width: 100%;
 }
 
