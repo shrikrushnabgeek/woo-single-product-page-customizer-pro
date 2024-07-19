@@ -7,20 +7,23 @@ function global_content_print_function()
 {
     global $wp_query;
     if (is_product()) {
-        $wsppcp_current_product_categories_id = $wsppcp_exclude_posts = $wsppcp_exclude_categories = $wsppcp_hook_exclude = [];
+        $current_product_cats = $current_product_tags = $wsppcp_exclude_posts = $wsppcp_exclude_categories = $wsppcp_exclude_tags = $wsppcp_hook_exclude = [];
 
-        $wsppcp_current_product_id           = $wp_query->post->ID;
+        $current_product_id                  = $wp_query->post->ID;
         $wsppcp_hooks                        = wsppcp_get_hook();
         $wsppcp_hook_exclude                 = wsppcp_get_hook_exclude();
-        $wsppcp_current_product_categories   = wp_get_post_terms($wsppcp_current_product_id, 'product_cat');
+        $wsppcp_current_product_categories   = wp_get_post_terms($current_product_id, 'product_cat');
 
-        foreach ($wsppcp_current_product_categories as $wsppcp_current_product_category) {
-            array_push($wsppcp_current_product_categories_id, $wsppcp_current_product_category->term_id);
-            if ($wsppcp_current_product_category->parent !== 0) {
-                array_push($wsppcp_current_product_categories_id, $wsppcp_current_product_category->parent);
+        foreach ($wsppcp_current_product_categories as $current_product_cat) {
+            array_push($current_product_cats, $current_product_cat->term_id);
+            if ($current_product_cat->parent !== 0) {
+                array_push($current_product_cats, $current_product_cat->parent);
             }
         }
-        $wsppcp_current_product_categories_id = array_unique($wsppcp_current_product_categories_id);
+        $current_product_cats = array_unique($current_product_cats);
+
+        $tags_obj_list = get_the_terms( $current_product_id, 'product_tag' );
+        $current_product_tags = wp_list_pluck($tags_obj_list, 'term_id');
 
         if (!empty($wsppcp_hooks)) {
             foreach ($wsppcp_hooks as $key => $wsppcp_hook) {
@@ -29,13 +32,15 @@ function global_content_print_function()
                     if (array_key_exists($key . '_exclude', $wsppcp_hook_exclude)) {
                         $wsppcp_exclude_posts       = $wsppcp_hook_exclude[$key . '_exclude']['exclude_post'];
                         $wsppcp_exclude_categories  = $wsppcp_hook_exclude[$key . '_exclude']['exclude_category'];
+                        $wsppcp_exclude_tags  = $wsppcp_hook_exclude[$key . '_exclude']['exclude_tag'];
                     } else {
                         $wsppcp_exclude_posts       = array();
                         $wsppcp_exclude_categories  = array();
+                        $wsppcp_exclude_tags        = array();
                     }
                 }
 
-                if (!in_array($wsppcp_current_product_id, $wsppcp_exclude_posts) && !array_intersect($wsppcp_exclude_categories, $wsppcp_current_product_categories_id)) {
+                if (!in_array($current_product_id, $wsppcp_exclude_posts) && !array_intersect($wsppcp_exclude_categories, $current_product_cats) && !array_intersect($wsppcp_exclude_tags, $current_product_tags)) {
 
                     switch ($key) {
                         case 'woocommerce_after_single_product_summary':
@@ -146,7 +151,9 @@ function woocommerce_product_thumbnails($arg)
  */
 function woocommerce_single_after_product_thumbnails() {
     $wsppcp_hooks = wsppcp_get_hook();
+
     if (isset($wsppcp_hooks['woocommerce_after_product_thumbnails']) && !empty($wsppcp_hooks['woocommerce_after_product_thumbnails'])) {
+
         echo '<div class="woocommerce-after-product-thumbnails-script"><script type="text/javascript">';
         echo 'window.addEventListener("load",function(){if(document.querySelectorAll(".woocommerce-product-gallery").length>0&&document.querySelectorAll(".woocommerce-product-gallery").length>0){var e=document.querySelector(".woocommerce-product-gallery"),r=document.createElement("div");r.className="woocommerce_after_product_thumbnails",r.innerHTML=';
         echo "'".wp_kses_post(wsppcp_output($wsppcp_hooks['woocommerce_after_product_thumbnails']))."'";

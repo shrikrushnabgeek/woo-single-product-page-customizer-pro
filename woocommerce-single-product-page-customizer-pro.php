@@ -3,14 +3,16 @@
 Plugin Name: Woocommerce Single Product Page Customizer Pro
 Description: By using this smart plugin, allows you to add text or HTML in wooocommerce Single product page , no need to edit theme and woocommerce plugin!
 Author: Geek Code Lab
-Version: 2.1
-WC tested up to: 8.6.1
+Plugin URI:  https://geekcodelab.com/wordpress-plugins/woocommerce-single-product-page-customizer-pro/
+Version: 2.1.1
+WC tested up to: 8.9.0
 Author URI: https://geekcodelab.com/
 Text Domain : woo-single-product-page-customizer-pro
+Requires Plugins:  woocommerce
 */
 if( !defined( 'ABSPATH' ) ) exit;
 
-define("WSPPCP_BUILD", '2.1');
+define("WSPPCP_BUILD", '2.1.1');
 
 require_once( plugin_dir_path (__FILE__) .'functions.php' );
 
@@ -50,9 +52,10 @@ function wsppcp_single_product_page_setting(){
 }
 require_once(plugin_dir_path( __FILE__ ) . 'admin/product-meta.php' );
 require_once(plugin_dir_path( __FILE__ ) . 'admin/wsppcp-categories-meta.php' );
+require_once(plugin_dir_path( __FILE__ ) . 'admin/wsppcp-tag-meta.php' );
 require_once(plugin_dir_path( __FILE__ ) . 'admin/wsppcp-admin-ajax.php' );
 require_once(plugin_dir_path( __FILE__ ) . 'front/index.php' );
-require_once(plugin_dir_path( __FILE__ ) . 'front/single-category-meta.php' );
+require_once(plugin_dir_path( __FILE__ ) . 'front/product-display-meta.php' );
 require_once(plugin_dir_path( __FILE__ ) . 'front/remove-content-tab.php' );
 require_once(plugin_dir_path( __FILE__ ) . 'front/label-setting.php' );
 
@@ -75,33 +78,7 @@ function wsppcp_plugin_active_single_product_page_customizert(){
 		update_option('wsppcp_hook_exclude',$wsppcp_hook_exclude);
 	}
 }
-if ( ! function_exists( 'wsppcp_install_woocommerce_admin_notice' ) ) {
-	/**
-	 * Trigger an admin notice if WooCommerce is not installed.
-	 */
-	function wsppcp_install_woocommerce_admin_notice() {
-		?>
-		<div class="error">
-			<p>
-				<?php
-				// translators: %s is the plugin name.
-				echo esc_html__( sprintf( '%s is enabled but not effective. It requires WooCommerce in order to work.', 'Woocommerce Single Product Page Customizer Pro' ), 'woo-single-product-page-customizer-pro' );
-				?>
-			</p>
-		</div>
-		<?php
-	}
-}
 
-function wsppcp_woocommerce_constructor() {
-    // Check WooCommerce installation
-	if ( ! function_exists( 'WC' ) ) {
-		add_action( 'admin_notices', 'wsppcp_install_woocommerce_admin_notice' );
-		return;
-	}
-
-}
-add_action( 'plugins_loaded', 'wsppcp_woocommerce_constructor' );
 /** Add settings And Support link Start */
 $plugin = plugin_basename(__FILE__);
 add_filter( "plugin_action_links_$plugin", 'wsppcp_add_plugin_settings_link');

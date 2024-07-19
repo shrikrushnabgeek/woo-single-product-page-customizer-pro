@@ -133,6 +133,11 @@ jQuery(document).ready(function () {
                 jQuery(".wsppcp_add_hook_form").find('#wsppcp_exclude_category').select2(
                     select2AjaxHandler('wsppcp_exclude_category')
                 );
+
+                // Initialize Select2 for "#wsppcp_exclude_tag" element
+                jQuery(".wsppcp_add_hook_form").find('#wsppcp_exclude_tag').select2(
+                    select2AjaxHandler('wsppcp_exclude_tag')
+                );
             }
         });
 
@@ -303,6 +308,11 @@ jQuery(document).ready(function () {
                 // Initialize Select2 for "#wsppcp_exclude_category" element
                 jQuery(".wsppcphook_details").find('#wsppcp_exclude_category').select2(
                     select2AjaxHandler('wsppcp_exclude_category')
+                );
+
+                // Initialize Select2 for "#wsppcp_exclude_tag" element
+                jQuery(".wsppcphook_details").find('#wsppcp_exclude_tag').select2(
+                    select2AjaxHandler('wsppcp_exclude_tag')
                 );
             }
         });

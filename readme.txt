@@ -2,11 +2,13 @@
 Contributors: rajkakadiya, rvadhel
 Donate link: https://paypal.me/rvadhel
 Tags: woocommerce customize, single product page, insert html in product page, single product page customize
+Plugin URI:  https://geekcodelab.com/wordpress-plugins/woocommerce-single-product-page-customizer-pro/
 Requires PHP: 7.4
 Requires at least: 6.3
-WC tested up to: 8.6.1
-Tested up to: 6.4.3
-Stable tag: 2.1
+WC tested up to: 8.9.0
+Tested up to: 6.5
+Stable tag: 2.1.1
+Requires Plugins: woocommerce
 
 By using this smart plugin, allows you to add text or HTML in wooocommerce Single product page, no need to edit theme and woocommerce plugin!
 
@@ -47,6 +49,7 @@ Bellow listed all positions of Single product page where you can show your custo
 *Easy and reliable to use.
 *Users can customize single product pages individually.
 *Set Content in single product pages by Category.
+*Set Content in single product pages by Product tag.
 *Option to customize single product page content using Hooks in bulk.
 *Users can update and remove content of any position.
 *Stick it on overall 18 positions on the page.
@@ -75,6 +78,10 @@ After active plugin go to Woocommerce->Woocommerce Single Product Page Customize
 
 
 == Changelog ==
+= 2.1.1 =
+  - Added support for WooCommerce Product Tags
+  - Exclude Tags for Specific Hook
+
 = 2.1 =
  Added new position
    - Woocommerce after product thumbnails
